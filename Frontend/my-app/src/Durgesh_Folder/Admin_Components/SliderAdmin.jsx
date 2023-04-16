@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import {AiFillDelete, AiFillHome, AiOutlineCaretDown} from "react-icons/ai";
+import {AiFillDelete, AiFillFileAdd, AiFillHome, AiOutlineCaretDown} from "react-icons/ai";
 import {HiShoppingCart} from "react-icons/hi"
-import {FaUserAlt} from "react-icons/fa"
+import {FaSellsy, FaUserAlt} from "react-icons/fa"
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Box, Menu, MenuButton, MenuItem, MenuList, Text , Button  , Image} from "@chakra-ui/react";
 import {ChevronDownIcon} from "@chakra-ui/icons"
 import "./styles.css"
 import {GoGraph} from "react-icons/go"
+import { BsFillCartFill } from "react-icons/bs";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +25,7 @@ const Sidebar = () => {
        <Box background="#171923" height="10vh"  borderBottom="1px  white" display="flex" justifyContent="space-between" alignItems="center" padding="0px 6%" >
       
        <Box display={{ base: "block", sm: "block", md: "block", lg: "block" , xl:  "none" , '2xl': "none" }}>
-        <Menu  >
+        {/* <Menu  >
   {({ isOpen }) => (
     <> 
     <Box display="flex" alignItems="center">
@@ -40,7 +41,7 @@ const Sidebar = () => {
       
     </>
   )}
-</Menu>
+</Menu> */}
 </Box>  
 
 {/*  This Box for empty space ------------ */}
@@ -79,9 +80,13 @@ const Sidebar = () => {
           </NavIcon>
       <Link to="/">  <SidebarLink> <AiFillHome style={{marginRight:"6px"}} /> Home </SidebarLink> </Link>  
           <Link to="/customerPageAdmin"> <SidebarLink> <FaUserAlt style={{marginRight:"6px"}}  /> Customers</SidebarLink> </Link>
-          <Link to="/addPageAdmin"> <SidebarLink> <HiShoppingCart style={{marginRight:"6px"}}  /> Add Products</SidebarLink> </Link>
+          <Link to="/addPageAdmin"> <SidebarLink> <AiFillFileAdd style={{marginRight:"6px"}}  /> Add Products</SidebarLink> </Link>
           <Link to="/deltePageAdmin"> <SidebarLink> <AiFillDelete style={{marginRight:"6px"}}  /> Delete Products</SidebarLink> </Link>
+
+          <Link to="/cartPageAdmin"> <SidebarLink> <BsFillCartFill style={{marginRight:"6px"}}  /> Cart Details</SidebarLink> </Link>
+          <Link to="/orderPageAdmin"> <SidebarLink> <FaSellsy style={{marginRight:"6px"}}  /> Order Details</SidebarLink> </Link>
           <Link to="/stat"> <SidebarLink> <GoGraph style={{marginRight:"6px"}}  /> Statistics</SidebarLink> </Link>
+
 
 
           

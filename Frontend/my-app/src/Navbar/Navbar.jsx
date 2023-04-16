@@ -7,7 +7,6 @@ import {
   Stack,
   Collapse,
   Icon,
-  Link,
   Popover,
   PopoverTrigger,
   PopoverContent,
@@ -15,8 +14,9 @@ import {
   useDisclosure,
   Image,
   Modal,
+  useToast,
 } from "@chakra-ui/react";
-import { BsFillBagFill } from "react-icons/bs";
+import {  BsHandbagFill } from "react-icons/bs";
 import {
   HamburgerIcon,
   CloseIcon,
@@ -29,7 +29,7 @@ import axios from "axios";
 import Reg from "../components/Registration/Reg";
 import Login from "../components/Login/Login";
 import { useLocation } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 
 
 
@@ -37,6 +37,7 @@ import { useLocation } from "react-router-dom";
 
 export default function MainNavbar() {
   const { isOpen, onToggle } = useDisclosure();
+  const toast=useToast()
   // const isAdmin = JSON.parse(localStorage.getItem("isAdmin"));
 const isAdmin=true
 
@@ -52,7 +53,7 @@ const isAdmin=true
 
   const handleLogout = async () => {
     try {
-      await axios.get(`${process.env.REACT_APP_URL}/users/logout`);
+      await axios.get(`${process.env.REACT_APP_URL}/user/logout`);
       localStorage.removeItem("token");
       openModal();
     } catch (err) {
@@ -62,7 +63,18 @@ const isAdmin=true
 
    const location = useLocation()
  
-   
+   const checking=()=>{
+    if(!token)
+    {
+      toast({
+        position: "top",
+        title: "Kindly Sign-In/Sign-UP first",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+   }
 
   return (
     <Box
@@ -85,7 +97,7 @@ const isAdmin=true
         borderStyle={"solid"}
         borderColor={useColorModeValue("gray.200", "gray.900")}
         align={"center"}
-        background={(location.pathname == "/adminPage" || location.pathname == "/customerPageAdmin" || location.pathname == "/deltePageAdmin" || location.pathname == "/stat") ? "#171923" : "#ffffff"}
+        background={(location.pathname == "/adminPage" || location.pathname == "/customerPageAdmin" || location.pathname == "/deltePageAdmin" || location.pathname == "/stat" || location.pathname == "/addPageAdmin"  || location.pathname == "/orderPageAdmin" || location.pathname == "/cartPageAdmin") ? "#171923" : "#ffffff"}
       >
         <Flex
           flex={{ base: 1, md: "auto" }}
@@ -103,7 +115,7 @@ const isAdmin=true
           />
         </Flex>
         <Flex justify={{ base: "center", md: "center" }}>
-          <Link href="/">
+          <Link to="/">
             <Image src={image} h="50px" w="60px" borderRadius={"50%"}></Image>
           </Link>
         </Flex>
@@ -118,8 +130,8 @@ const isAdmin=true
           </Flex>
         </Flex>
         <Flex align="center" mr={"20px"}>
-          <Link href="/cart">
-            <BsFillBagFill />
+          <Link to={token?"/cart":null} onClick={()=>checking()}>
+            <BsHandbagFill style={{fontSize:"25px" , color:"#f56902"}} />
           </Link>
         </Flex>
         {token && (
@@ -133,6 +145,7 @@ const isAdmin=true
           color="#4e8cf3"
           variant="outline"
           fontWeight="bold"
+          mr="7px"
         >
           Admin
         </Button>
@@ -200,7 +213,7 @@ const DesktopNav = () => {
             <PopoverTrigger>
               <Link
                 //   p={2}
-                href={navItem.href ?? "#"}
+                to="/products"
                 fontSize={"sm"}
                 fontWeight={500}
                 color={ location.pathname === "/adminPage" ? "#ffff" : linkColor}
@@ -240,7 +253,7 @@ const DesktopNav = () => {
 const DesktopSubNav = ({ label, href, subLabel }) => {
   return (
     <Link
-      href={href}
+      to={href}
       role={"group"}
       display={"block"}
       p={2}
@@ -331,7 +344,7 @@ const MobileNavItem = ({ label, children, href }) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Link key={child.label} py={2} to={child.href}>
                 {child.label}
               </Link>
             ))}
@@ -356,35 +369,6 @@ const NAV_ITEMS = [
     ],
   },
 
-  {
-    label: "WOMEN",
-    children: [
-      {
-        label: "TOPS",
-        href: "/products",
-      },
-      {
-        label: "BOTTOMS",
-        href: "/products",
-      },
-      {
-        label: "OUTERWEAR",
-        href: "/products",
-      },
-      {
-        label: "ACCESSORIES",
-        href: "/products",
-      },
-      {
-        label: "FLEECE",
-        href: "/products",
-      },
-      {
-        label: "COZY",
-        href: "/products",
-      },
-    ],
-  },
   {
     label: "MEN",
     children: [
@@ -448,41 +432,7 @@ const NAV_ITEMS = [
       },
     ],
   },
-  {
-    label: "GEAR",
-    children: [
-      {
-        label: "PACKS & LUGGAGE",
-        href: "/products",
-      },
-      {
-        label: "COMPING",
-        href: "/products",
-      },
-      {
-        label: "HYDRATION",
-        href: "/products",
-      },
-
-      {
-        label: "PETS",
-        href: "/products",
-      },
-    ],
-  },
-  {
-    label: "FOOTWEAR",
-    children: [
-      {
-        label: "WOMEN",
-        href: "/products",
-      },
-      {
-        label: "MEN",
-        href: "/products",
-      },
-    ],
-  },
+  
   // {
   //   label: 'HOME',
   //   children: [
@@ -509,44 +459,8 @@ const NAV_ITEMS = [
 
   //   ],
   // },
-  {
-    label: "SALE",
-    children: [
-      {
-        label: "WOMEN",
-        href: "/products",
-      },
-      {
-        label: "MEN",
-        href: "/products",
-      },
-      {
-        label: "KIDS",
-        href: "/products",
-      },
-    ],
-  },
-  {
-    label: "RESALE",
-    children: [
-      {
-        label: "WOMEN",
-        href: "/products",
-      },
-      {
-        label: "MEN",
-        href: "/products",
-      },
-      {
-        label: "KIDS",
-        href: "/products",
-      },
-      {
-        label: "HOME",
-        href: "/products",
-      },
-    ],
-  },
+ 
+  
   {
     label: "GUIDEPOST",
     children: [

@@ -11,35 +11,50 @@ import { PriceTag } from "./PriceTag";
 import { CartProductMeta } from "./CartProductMeta";
 import axios from "axios";
 import React from "react";
+import { getCartDelete } from "../../Redux/Cart_Reducer/action";
+import { useDispatch } from "react-redux";
+
 
 export const CartItem = (props) => {
   const toast = useToast();
   // console.log(props)
-  let { brand, title, mainImage, price, _id, settrigger } = props;
+  const {_id} = props
+  let { brand, title, mainImage, price } = props.productId ;
+// console.log(props , "props")
 
-  const onClickDelete = () => {
-    axios({
-      method: "DELETE",
-      url: `${process.env.REACT_APP_URL}/carts/delete/${_id}`,
-      headers: {
-        authorization: JSON.parse(localStorage.getItem("token")),
-      },
-    })
-      .then((res) => {
-        toast({
-          position: "top",
-          title: "Item removed from cart",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        settrigger((past)=>!past)
-      })
-      .catch((err) => console.log(err));
+ const dispatch = useDispatch()
+
+  const onClickDelete = (_id) => {
+    // axios({
+    //   method: "DELETE",
+    //   url: `${process.env.REACT_APP_URL}/cart/${_id}`,
+    //   headers: {
+    //     authorization: JSON.parse(localStorage.getItem("token")),
+    //   },
+    // })
+    //   .then((res) => {
+    //     toast({
+    //       position: "top",
+    //       title: "Item removed from cart",
+    //       status: "success",
+    //       duration: 3000,
+    //       isClosable: true,
+    //     });
+    //   })
+    //   .catch((err) => console.log(err));
+
+    dispatch(getCartDelete(_id))
+    toast({
+            position: "top",
+            title: "Item removed from cart",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
   };
 
   return (
-    <Flex
+    <Flex borderBottom="2px solid #f5f7fa" p="10px" 
       direction={{
         base: "column",
         md: "row",
@@ -62,7 +77,7 @@ export const CartItem = (props) => {
         <PriceTag price={price} />
         <CloseButton
           aria-label={`Delete ${brand} from cart`}
-          onClick={()=>onClickDelete()}
+          onClick={()=>onClickDelete(_id)}
         />
       </Flex>
 

@@ -1,58 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
   Heading,
   HStack,
-  Link,
   Stack,
   useColorModeValue as mode,
-  VStack,
+  VStack, Text
 } from "@chakra-ui/react";
 // import { cartData } from '../Components/_data'
 import { CartItem } from "../Components/CartItem";
 import { CartOrderSummary } from "../Components/CartOrderSummary";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import Footer from "../../footer/Footer";
+import { useDispatch, useSelector } from "react-redux";
+import { getCartData } from "../../Redux/Cart_Reducer/action";
 
 export const CartPage = () => {
-  const [cdata, setcdata] = React.useState([]);
-  // console.log(cdata)
-  const [total, settotal] = React.useState(0);
-  // console.log(total)
-  const [trigger,settrigger]=React.useState(true)
-  // console.log(trigger)
-  React.useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${process.env.REACT_APP_URL}/carts/usercart`,
-      headers: {
-        authorization: JSON.parse(localStorage.getItem("token")),
-      },
+ var total  = 0
+  // console.log(total ,"total" ,1)
+
+  
+  // durgesh code -------
+
+  const {cartData} = useSelector((state)=>{
+    return {
+      cartData:state.CartReducer.cartData
+    }
+  })
+    // console.log('cartData' ,cartData[1])
+    if(cartData[0] != "N"){
+    cartData.map((ele)=>{
+      total +=  ele.productId.price
     })
-      .then((res) =>{ 
-        setcdata([])
-        settotal(0)
-        if(res.data!='No items in your cart')
-        {
-        res.data.map((each)=>{
-          axios({
-            method: "GET",
-            url: `${process.env.REACT_APP_URL}/products/findit`,
-            headers: {
-              authorization: JSON.parse(localStorage.getItem("token")),
-              productId:each.productId,
-            },
-          })
-            .then((res) => {
-              setcdata((prev)=>[...prev,res.data])
-              settotal((pre) => pre + res.data.price);
-            })
-            .catch((err) => console.log(err));
-        })
-      }
-      })
-      .catch((err) => console.log(err));
-  }, [trigger]);
+  }
+   const dispatch = useDispatch()
+
+   useEffect(()=>{
+      dispatch(getCartData)
+   },[])
+
   
   return (
     <div>
@@ -68,30 +56,34 @@ export const CartPage = () => {
           spacing={{ base: "8", md: "16" }}
         >
           <Stack spacing={{ base: "8", md: "10" }} flex="2">
-            <Heading fontSize="2xl" fontWeight="extrabold">
+            <Text fontSize="24px" fontWeight="500" color="#646878">
               Shopping Cart
-            </Heading>
+            </Text>
 
-            <Stack spacing="6">
-              {cdata.length==0 ? (
+            <Stack spacing="6" border="2px  grey" padding="10px" shadow="md" width={{base:"90%" , sm:"90vw" ,md:"76vw",lg:"60vw",xl:"46vw" , "2xl":"46vw"}}>
+              { cartData[0] == "N"  && (
                 <Box
                   border={"0px"}
                   height={"50vh"}
                   display={"flex"}
                   alignItems={"center"}
                   justifyContent={"center"}
+                  // border="2px solid red"
                 >
                   <VStack>
                     <Heading size={"md"}>Your Cart is Empty</Heading>
-                    <Link href="/products" color={mode("blue.500", "blue.200")}>
+                    <Link to="/products" color={mode("blue.500", "blue.200")}>
                       Try latest trends
                     </Link>
                   </VStack>
                 </Box>
-              ) : 
-              (
-                cdata.map((item,index)=>
-                <CartItem key={index} {...item} settrigger={settrigger}/>
+              ) }
+
+           { (cartData[0] !== "N"  && 
+                cartData?.map((item,index)=>
+                <div key={index}>
+                <CartItem key={index} {...item}  />
+                </div>
                 )
               )
               }
@@ -102,13 +94,14 @@ export const CartPage = () => {
             <CartOrderSummary total={total} />
             <HStack mt="6" fontWeight="semibold">
               <p>or</p>
-              <Link href="/products" color={mode("blue.500", "blue.200")}>
-                Continue shopping
-              </Link>
+              <Link to="/products">  <Text color="#4e93f5" fontSize='15px'  fontWeight="500" > Continue shopping</Text> </Link>
+                
+            
             </HStack>
           </Flex>
         </Stack>
       </Box>
+      <Footer />
     </div>
   );
 };

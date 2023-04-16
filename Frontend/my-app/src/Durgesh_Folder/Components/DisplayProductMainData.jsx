@@ -15,7 +15,7 @@ import { DeleteProductData } from '../../Redux/Laptop_reducer/action'
 
 
 
-const DisplayProductMainData = ({ src ,uniqueId, name  ,price ,model , review ,realPrice ,isLaptopLoading ,mainImage , id})=>{
+const DisplayProductMainData = ({allData, src ,uniqueId, name  ,price ,model , review ,realPrice ,isLaptopLoading ,mainImage , id})=>{
    
   
   let style = {
@@ -26,7 +26,7 @@ const DisplayProductMainData = ({ src ,uniqueId, name  ,price ,model , review ,r
     const [effect , setEffect] = useState(false)
     const [wishlistColor , setWishlistColor] = useState(false)
     
-
+// console.log(allData ,"allData")
 
    
     //  here is carousel is started---------------------------------------------
@@ -73,10 +73,21 @@ const closeProductHover = ()=>{
 // here wishlist remove----------------------------------------
 
     const dispatch = useDispatch()
-    
+    const toast = useToast()
+
     const handleDeleteProduct= (id)=>{
       console.log(id)
           dispatch(DeleteProductData(id))
+          .then(()=>{
+            toast({
+              title: 'Deleted Successfully',
+              description: "Product Deleted",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            })
+          })
+       
     }
  
 
@@ -92,7 +103,7 @@ const closeProductHover = ()=>{
  return (
       
 
-    <Box shadow="base" className='hoverProductDiv' w={{base:"80vw", sm: "55vw", md: "32vw", lg: "23vw" ,xl: "23vw",'2xl': "23vw",}} h={{base:"375px", sm: "375px", md: "385px", lg: "385px" ,xl: "385px",'2xl': "385px",}}  style={style} border="2px  red" >
+    <Box shadow="2xl" className='hoverProductDiv' w={{base:"80vw", sm: "55vw", md: "32vw", lg: "23vw" ,xl: "23vw",'2xl': "23vw",}} h={{base:"375px", sm: "375px", md: "385px", lg: "385px" ,xl: "385px",'2xl': "385px",}}  style={style}  >
       
       {/*  Corousel images are here --------------------------------------------------------- */}
      <Skeleton isLoaded={isLaptopLoading}    >
@@ -122,7 +133,7 @@ const closeProductHover = ()=>{
           {/*  wishlist on hover---------------------------------------- */}
     { effect && (<Box onClick={()=>handleDeleteProduct(id)}  style={{border:"2px solid #EBECEE" , width:"60%" , margin:"auto" , display:"flex" ,justifyContent:"center" , alignItems:"center" ,padding:"2px" , color:"#fff" }}>{wishlistColor ? <AiFillHeart color="red"  /> : <AiFillDelete /> } <Text ml={2}>Delete</Text> </Box> )}
 
-      {/*  reviws star on hover ----------------------------------------------- */}
+      {/*   start on hover ----------------------------------------------- */}
      {effect && <Box style={{display:"flex" ,justifyContent:"space-between" }}>
          <Box>
          <Heading fontSize="15.5px" fontWeight="600" color="#303030" textAlign="left">{model}</Heading>
