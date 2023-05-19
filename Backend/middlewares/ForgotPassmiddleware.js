@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const otpGenerator = require("otp-generator");
-const { UserModel } = require("../models/User.model");
+const { UserModel } = require("../Modals/UserModal");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 
@@ -20,6 +20,7 @@ const sendOtp = async (req, res, next) => {
       },
     });
 
+    
     const otp = otpGenerator.generate(4, {
       lowerCaseAlphabets: false,
       upperCaseAlphabets: false,

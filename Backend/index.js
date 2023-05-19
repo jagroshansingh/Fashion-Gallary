@@ -1,10 +1,10 @@
+
+
 const express = require("express");
 require("dotenv").config();
 const { connection } = require("./config/db");
 const { userRouter } = require("./routes/User.route");
 const {ProductsRoute}=require('./routes/productRoute');
-const {OrderRouter}=require('./routes/Order');
-const {Cartrouter}=require('./routes/Cart');
 const {authenticate}=require('./middlewares/Auth.middleware')
 
 const cors = require("cors");
@@ -17,9 +17,6 @@ app.use(express.json());
 
 app.use("/users", userRouter);
 app.use('/products',ProductsRoute);
-app.use(authenticate);
-app.use('/orders',OrderRouter);
-app.use('/carts',Cartrouter);
 
 //connect to the server:-
 app.listen(process.env.port, async () => {
@@ -31,3 +28,4 @@ app.listen(process.env.port, async () => {
   }
   console.log(`Server is running on http://localhost:${process.env.port}`);
 });
+
